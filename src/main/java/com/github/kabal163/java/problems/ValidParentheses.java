@@ -12,6 +12,7 @@ public class ValidParentheses {
         System.out.println("The sequence of '[]' is " + (isValid("[]") ? VALID : INVALID));
         System.out.println("The sequence of '[{]}' is " + (isValid("[{]}") ? VALID : INVALID));
         System.out.println("The sequence of '()[]{}' is " + (isValid("()[]{}") ? VALID : INVALID));
+        System.out.println("The sequence of '()[]{}}' is " + (isValid("()[]{}}") ? VALID : INVALID));
     }
 
     public static boolean isValid(String s) {
@@ -21,22 +22,24 @@ public class ValidParentheses {
         }
         Deque<Character> stack = new ArrayDeque<>();
 
-        for (char c : s.toCharArray()) {
-            if (c == '(' || c == '{' || c == '[') {
-                stack.push(c);
+        for (char current : s.toCharArray()) {
+            if (current == '(' || current == '{' || current == '[') {
+                stack.push(current);
             } else {
                 if (stack.isEmpty()) {
                     return false;
                 }
-                if (c == ')' && stack.peek() == '(') {
-                    stack.pop();
-                } else if (c == '}' && stack.peek() == '{') {
-                    stack.pop();
-                } else if (c == ']' && stack.peek() == '[') {
-                    stack.pop();
-                } else {
-                    return false;
+                char lastOpen = stack.pop();
+                if (lastOpen == '(' && current == ')') {
+                    continue;
                 }
+                if (lastOpen == '{' && current == '}') {
+                    continue;
+                }
+                if (lastOpen == '[' && current == ']') {
+                    continue;
+                }
+                return false;
             }
         }
 
